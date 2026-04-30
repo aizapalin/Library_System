@@ -1,46 +1,23 @@
-{% load static %}  
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sylvan Library - Book Management</title>
+    <title>Borrow Books - Sylvan Library</title>
     <link rel="stylesheet" href="{% static 'book_management/css/Index_style.css' %}">
 </head>
-
-
-
-<body class="{% if user.is_superuser %}admin-mode{% else %}member-mode{% endif %}">
-
-    <nav style="margin-bottom: 40px; display: flex; gap: 30px; border-bottom: 1px solid #d4af37; padding: 20px; justify-content: center; background: rgba(0,0,0,0.2);">
-        {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
-            <a href="{% url 'book_management:index' %}" 
-               style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
-               📜 The Archives
-            </a>
-
-            <a href="{% url 'members:index' %}" 
-               style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
-               👤 The Patrons
-            </a>
-
-            <a href="{% url 'borrow:borrow_index' %}" 
-                style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
-                ✨ Active Borrowing
-            </a>
-        {% endif %}
-    </nav>
-
+<body>
     <nav class="sylvan-nav-shelf">
         <div class="shelf-left">
-            <form action="{% url 'book_management:index' %}" method="GET" class="search-form">
+            <form method="GET" action="{% url 'book_management:index' %}" class="search-form" style="gap: 8px; padding-left: 6px;">
                 <input
                     type="text"
                     name="q"
                     placeholder="Search books, authors, categories..."
-                    class="search-input"
                     value="{{ query }}"
+                    class="search-input"
+                    style="width: min(520px, 100%);"
                     list="bookSearchSuggestions"
                     data-search-input
                     data-suggest-url="{% url 'book_management:search_suggestions' %}"
@@ -86,7 +63,6 @@
                 <button class="carousel-arrow left" type="button" data-carousel-prev aria-label="Previous books">‹</button>
                 <div class="carousel-viewport" data-carousel-viewport>
                     <div class="book-list carousel-track" data-carousel-track>
-
                         {% for book in group.list %}
                             <div class="book-card" onclick="togglePop(this)">
                                 <div class="book-cover">
@@ -97,52 +73,31 @@
                                     {% endif %}
                                 </div>
 
-                                <div class="book-info">
-                                    <span class="book-title">{{ book.title }}</span>
-                                    <span class="author-name">{{ book.author.name }}</span> 
-                                </div>
+                                    <div class="book-info">
+                                        <span class="book-title">{{ book.title }}</span>
+                                        <span class="author-name">{{ book.author.name }}</span>
+                                    </div>
 
-                                <div class="timestamp">
-                                    ISBN: {{ book.details.isbn }} <br> {{ book.details.published_date }}
-                                </div>
-                                
-                                <div class="action-row">
-                                    {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
-                                        <a href="{% url 'book_management:edit_book' book.id %}" class="rewrite-btn">[REWRITE]</a>
-                                        <form action="{% url 'book_management:delete_book' book.id %}" method="post" onsubmit="return confirm('Burn this book? This will permanently delete it.');">
-                                            {% csrf_token %}
-                                            <button type="submit" class="burn-btn">[BURN]</button>
-                                        </form>
-                                    {% else %}
+                                    <div class="timestamp">
+                                        ISBN: {{ book.details.isbn }}<br>
+                                        Available: {{ book.available_copies }} / {{ book.total_copies }}
+                                    </div>
+
+                                    <div class="action-row">
                                         <a href="{% url 'book_management:book_detail' book.id %}" class="borrow-btn">borrow</a>
-                                    {% endif %}
-                                </div>
-
+                                    </div>
                             </div>
                         {% empty %}
                             <div class="empty-state">
                                 <p>The library shelves are currently bare. No volumes found.</p>
                             </div>
                         {% endfor %}
-
                     </div>
                 </div>
                 <button class="carousel-arrow right" type="button" data-carousel-next aria-label="Next books">›</button>
             </div>
         </section>
     {% endfor %}
-
-        <div class="admin-controls">
-            {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
-                <a href="{% url 'book_management:add_book' %}" class="add-volume-btn">+ Consign New Volume</a>
-            {% endif %}
-        </div>
-
-        <main>
-            {% block content %}
-            {% endblock %}
-        </main>
-
 
     <script>
         function togglePop(card) {
@@ -168,9 +123,7 @@
             }
         }, true);
     </script>
-
     <script src="{% static 'book_management/js/carousel.js' %}"></script>
     <script src="{% static 'book_management/js/search_suggestions.js' %}"></script>
-
 </body>
 </html>

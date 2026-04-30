@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="management-zone">
+    <h1>Active Borrow</h1>
+    <div class="subtitle">Borrowing Records</div>
+
+    <div style="text-align: center; margin-bottom: 30px;">
+        <a href="?status=All" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.status == 'All' or not request.GET.status %}1{% else %}0.7{% endif %};">All</a>
+        <a href="?status=Pending" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.status == 'Pending' %}1{% else %}0.7{% endif %};">Pending</a>
+        <a href="?status=Active" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.status == 'Active' %}1{% else %}0.7{% endif %};">Active</a>
+        <a href="?status=Returned" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.status == 'Returned' %}1{% else %}0.7{% endif %};">Returned</a>
+        <a href="?status=Overdue" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.status == 'Overdue' %}1{% else %}0.7{% endif %};">Overdue</a>
+    </div>
+
+    <div class="admin-controls" style="margin-bottom: 30px;">
+        <a href="{% url 'borrow:add_borrow' %}" class="add-volume-btn">+ New Loan Record</a>
+    </div>
+
+    <div class="book-list">
+        {% for record in records %}
+            <div class="book-card" style="border-left: 5px solid var(--gold-leaf);">
+                <div class="book-title">{{ record.book.title }}</div>
+                <span class="author-name">Borrowed by: {{ record.member.first_name }} {{ record.member.last_name }}</span>
+                
+                <div class="timestamp">
+                    Issued: {{ record.borrow_date }}<br>
+                    <strong>Due: {{ record.due_date }}</strong><br>
+                    Status:
+                    <span style="
+                        color:
+                        {% if record.status == 'Pending' %}var(--paper-text){% elif record.status == 'Returned' %}var(--moss-accent){% elif record.status == 'Declined' %}#ff8888{% elif record.is_overdue %}#ff4444{% else %}var(--gold-leaf){% endif %};
+                    ">
+                        {% if record.status == 'Returned' %}
+                            Completed
+                        {% elif record.status == 'Declined' %}
+                            Declined
+                        {% elif record.status == 'Pending' %}
+                            Pending
+                        {% elif record.is_overdue %}
+                            Overdue
+                        {% else %}
+                            Active
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
+                <div class="action-row">
+                    <a href="{% url 'borrow:request_detail' record.pk %}" class="action-btn rewrite-btn">OPEN REQUEST</a>
+                </div>
+                {% endif %}
+            </div>
+
+        {% empty %}
+            <div class="empty-state">
+                <h2>No Records Found...</h2>
+                <p>No scrolls are currently out on loan.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Librarian | Sylvan Library</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Author_style.css' %}">
+</head>
+<body>
+    <div class="auth-box">
+        <h2>REGISTER LIBRARIAN</h2>
+
+        <form method="post" action="">
+            {% csrf_token %}
+        
+            {% if form.errors %}
+                <div style="color: #ff4444; font-size: 0.8em; margin-bottom: 10px; text-align: left;">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                    
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        
+            <input type="text" name="username" placeholder="Username" value="{{ form.username.value|default:'' }}" required>
+            <input type="email" name="email" placeholder="Email" value="{{ form.email.value|default:'' }}" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
+        
+            <button type="submit">CREATE LIBRARIAN</button>
+        </form>
+
+        <a href="{% url 'book_management:profile' %}">Back to profile</a>
+    </div>
+</body>
+</html>
+

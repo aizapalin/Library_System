@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="management-zone members-page-center">
+    <h2>Update Patron Records</h2>
+    <div class="subtitle">Modifying: {{ member.first_name }} {{ member.last_name }}</div>
+
+    <div class="form-container" style="margin: 0 auto;">
+        <form method="POST" action="">
+            {% csrf_token %}
+            
+            {{ form.as_p }}
+            
+            <button type="submit" class="submit-btn" style="margin-top: 20px;">Update Records</button>
+        </form>
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'members:index' %}">← Cancel Changes</a>
+    </div>
+</div>
+{% endblock %}

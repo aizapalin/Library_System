@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sylvan Library</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Member_style.css' %}">
+</head>
+<body>
+    {% if user.is_authenticated %}
+    {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
+        <nav style="margin-bottom: 40px; display: flex; gap: 30px; border-bottom: 1px solid #d4af37; padding: 20px; justify-content: center; background: rgba(0,0,0,0.2);">
+            <a href="{% url 'book_management:index' %}" 
+            style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+            📜 The Archives
+            </a>
+
+            <a href="{% url 'members:index' %}" 
+            style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+            👤 The Patrons
+            </a>
+
+            <a href="{% url 'borrow:borrow_index' %}" 
+            style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+            ✨ Active Borrowing
+            </a>
+        </nav>
+    {% endif %}
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

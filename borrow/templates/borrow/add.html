@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container"> 
+    <h2>{% if editing %}REWRITE RECORD{% else %}BORROW STATION{% endif %}</h2>
+    <div class="subtitle">{% if editing %}Updating Archives{% else %}ARCHIVES RECEPTION{% endif %}</div>
+
+    {% if not editing %}
+    <form method="GET" action="" style="margin-bottom: 20px;">
+        <label>STEP 1: SCAN OR ENTER ISBN</label>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" name="isbn_search" value="{{ isbn_query|default:'' }}" placeholder="Search ISBN...">
+            <button type="submit" class="submit-btn" style="width: auto;">FIND</button>
+        </div>
+    </form>
+    <hr style="border-top: 1px solid var(--gold-leaf); opacity: 0.3;">
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label>{% if editing %}CONFIRM VOLUME{% else %}STEP 2: CONFIRM VOLUME{% endif %}</label>
+        {{ form.book }}
+        
+        <label>Patron (MEMBER)</label>
+        {{ form.member }}
+        
+        <label>RETURN DUE DATE</label>
+        {{ form.due_date }}
+        
+        <label>REGISTRY STATUS</label>
+        {{ form.status }}
+        
+        <button type="submit" class="submit-btn" style="margin-top: 20px;">
+            {% if editing %}CONFIRM CHANGES{% else %}AUTHORIZE BORROWING{% endif %}
+        </button>
+    </form>
+
+    <div style="text-align: right; margin-top: 15px;">
+        <a href="{% url 'borrow:borrow_index' %}" style="color: var(--gold-leaf); text-decoration: none; opacity: 0.9;">Return to Registry →</a>
+    </div>
+</div>
+{% endblock %}

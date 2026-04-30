@@ -1,0 +1,61 @@
+{% load static %}  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Consign New Volume - Sylvan Library</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Add_style.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Consign New Volume</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label><span>Title of the Tome</span></label>
+            <input type="text" name="title" required>
+
+            <label>
+                <span>Scribe (Author)</span>
+                <a href="{% url 'book_management:add_author' %}?next={{ request.get_full_path|urlencode }}" class="sub-link">[+ New Scribe]</a>
+            </label>
+            <select name="author">
+                {% for author in authors %}
+                    <option value="{{ author.id }}">{{ author.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>
+                <span>Volume Category</span>
+                <a href="{% url 'book_management:add_category' %}?next={{ request.get_full_path|urlencode }}" class="sub-link">[+ New Category]</a>
+            </label>
+            <select name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label><span>ISBN Identification</span></label>
+            <input type="text" name="isbn" placeholder="e.g. 978-3-16..." required>
+
+            <label><span>Total Copies</span></label>
+            <input type="number" name="total_copies" min="0" value="1">
+
+            <label><span>Pages</span></label>
+            <input type="number" name="pages" min="0" value="0">
+
+            <label><span>Overview</span></label>
+            <textarea name="overview" rows="4" style="width: 100%;"></textarea>
+
+            <label><span>Cover Image</span></label>
+            <input type="file" name="cover_image" accept="image/*">
+
+            <button type="submit" class="submit-btn">Bind to Library</button>
+        </form>
+        
+        <div class="back-navigation">
+            <a href="{% url 'book_management:index' %}">Return to Shelves →</a>
+        </div>
+    </div>
+</body>
+</html>

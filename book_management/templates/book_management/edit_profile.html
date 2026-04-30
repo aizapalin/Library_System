@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Sylvan Library</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Index_style.css' %}">
+</head>
+<body class="edit-profile-page">
+    <nav style="margin-bottom: 40px; display: flex; gap: 30px; border-bottom: 1px solid #d4af37; padding: 20px; justify-content: center; background: rgba(0,0,0,0.2);">
+        <a href="{% url 'book_management:profile' %}" style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+           ← Back to Profile
+        </a>
+    </nav>
+
+    <div class="title-container">
+        <h1 class="main-title" style="font-size: 58px !important;">Edit Profile</h1>
+        <p class="management-tag">Update Username and Picture</p>
+    </div>
+
+    <div class="book-card" style="max-width: 500px; width: 100%;">
+        {% if error %}
+            <p style="color: #ff8888; margin-bottom: 16px;">{{ error }}</p>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data" style="width: 100%;">
+            {% csrf_token %}
+            <div style="margin-bottom: 16px; text-align: left;">
+                <label for="username" class="author-name" style="display: block;">Username</label>
+                <input id="username" name="username" type="text" value="{{ request.user.username }}" style="width: 100%; box-sizing: border-box; border: 1px solid rgba(212, 175, 55, 0.3); background: rgba(0,0,0,0.2); color: #e0d7c6; padding: 12px; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 24px; text-align: left;">
+                <label for="profile_pic" class="author-name" style="display: block;">Profile Picture</label>
+                <input id="profile_pic" name="profile_pic" type="file" accept="image/*" style="color: #e0d7c6;">
+            </div>
+            <button type="submit" class="logout-btn" style="width: 100%;">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<h1>Library Books</h1>
+
+{% for book in books %}
+    <div>
+        <h3>{{ book.title }}</h3>
+        <p>Author: {{ book.author.name }}</p>
+        <p>Copies: {{ book.copies }}</p>
+
+        {% if book.copies > 0 %}
+            <button>Borrow</button>
+        {% else %}
+            <p style="color:red;">Not Available</p>
+        {% endif %}
+    </div>
+{% endfor %}
