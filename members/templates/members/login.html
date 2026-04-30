@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="management-zone members-page-center">
+    <h2>Scholar Login</h2>
+    <div class="subtitle">Enter the Archives</div>
+
+    <div class="form-container" style="margin: 0 auto;">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-btn" style="margin-top: 20px;">Enter Archives</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

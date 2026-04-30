@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Sylvan Library</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Index_style.css' %}">
+</head>
+<body class="profile-page">
+    <nav style="margin-bottom: 40px; display: flex; gap: 30px; border-bottom: 1px solid #d4af37; padding: 20px; justify-content: center; background: rgba(0,0,0,0.2);">
+        <a href="{% url 'book_management:index' %}" style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+           ← Back to Archives
+        </a>
+        <a href="{% url 'book_management:edit_profile' %}" style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+           ✎ Edit Profile
+        </a>
+    </nav>
+
+    <div class="title-container">
+        <h1 class="main-title" style="font-size: 64px !important;">Profile</h1>
+        <p class="management-tag">Account Overview</p>
+    </div>
+
+    <div class="book-card" style="max-width: 500px; width: 100%;">
+        {% if request.user.profile_pic %}
+            <img src="{{ request.user.profile_pic.url }}" alt="Profile picture" style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 2px solid #d4af37; margin-bottom: 16px;">
+        {% else %}
+            <div style="width: 140px; height: 140px; border-radius: 50%; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; font-size: 58px; margin-bottom: 16px;">👤</div>
+        {% endif %}
+        <div class="book-info" style="width: 100%;">
+            <span class="book-title" style="display: block; min-height: 0;">{{ request.user.get_full_name|default:request.user.username }}</span>
+            <span class="author-name">Username: {{ request.user.username }}</span>
+            <span class="author-name">Email: {{ request.user.email|default:"Not set" }}</span>
+            <span class="author-name">Library ID: {{ request.user.library_id }}</span>
+            <span class="author-name">Role: {% if request.user.is_staff or request.user.is_superuser %}Librarian{% else %}{{ request.user.role|title }}{% endif %}</span>
+        </div>
+
+        {% if request.user.is_librarian %}
+            <div style="width: 100%; margin-top: 18px;">
+                <a href="{% url 'register_librarian' %}" class="add-volume-btn" style="display: inline-block; width: 100%; text-align: center;">
+                    Register New Librarian
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if not request.user.is_staff and not request.user.is_superuser %}
+    {% if request.user.role == "guest" or request.user.role == "student" %}
+        <div class="title-container" style="margin-top: 50px; margin-bottom: 20px;">
+            <h2 class="management-tag" style="font-size: 22px;">My Borrowed Books</h2>
+        </div>
+
+        <div style="height: 1px; background: rgba(212, 175, 55, 0.4); width: 85%; max-width: 1000px; margin: 0 auto 20px auto;"></div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="{% url 'book_management:profile' %}?borrow_status=pending" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.borrow_status == 'pending' %}1{% else %}0.7{% endif %};">Pending</a>
+            <a href="{% url 'book_management:profile' %}?borrow_status=accepted" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.borrow_status == 'accepted' %}1{% else %}0.7{% endif %};">Accepted</a>
+            <a href="{% url 'book_management:profile' %}?borrow_status=declined" style="color: var(--gold-leaf); text-decoration: none; margin: 0 10px; opacity: {% if request.GET.borrow_status == 'declined' %}1{% else %}0.7{% endif %};">Declined</a>
+        </div>
+
+        <div class="book-list">
+            {% for record in borrowed_records %}
+                <div class="book-card">
+                    <div class="book-cover">
+                        {% if record.book.details.cover_image %}
+                            <img src="{{ record.book.details.cover_image.url }}" alt="Cover" style="width:100%; height:100%; object-fit: cover; border-radius: 6px;">
+                        {% else %}
+                            <span class="decoration">🌿</span>
+                        {% endif %}
+                    </div>
+                    <div class="book-info">
+                        <span class="book-title">{{ record.book.title }}</span>
+                        <span class="author-name">{{ record.book.author.name }}</span>
+                    </div>
+                    <div class="timestamp">
+                        ISBN: {{ record.book.details.isbn }}<br>
+                        Borrowed: {{ record.borrow_date }}<br>
+                        Due: {{ record.due_date }}<br>
+                        Status: {{ record.status }}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <p>You haven’t borrowed any books yet. Start exploring and find your next read!</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endif %}
+</body>
+</html>

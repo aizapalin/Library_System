@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }} - Borrow</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Member_style.css' %}">
+</head>
+<body>
+    <div class="management-zone borrow-detail-page">
+        <div class="back-navigation" style="width: 100%; text-align: center; margin-bottom: 18px;">
+            <a href="{% url 'book_management:index' %}" style="color: var(--moss-accent); text-decoration: none; font-style: italic;">
+                ← Back to Books
+            </a>
+        </div>
+
+        <div class="book-card borrow-book-card">
+            <div class="borrow-book-layout">
+                <div class="book-cover borrow-book-cover">
+                    {% if book.details.cover_image %}
+                        <img src="{{ book.details.cover_image.url }}" alt="{{ book.title }} cover" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
+                    {% else %}
+                        <span style="font-size: 44px;">📖</span>
+                    {% endif %}
+                    <span class="borrow-book-category">
+                        {{ book.category.name|default:"General" }}
+                    </span>
+                </div>
+
+                <div class="borrow-book-info">
+                    <h1 class="borrow-book-title">{{ book.title }}</h1>
+                    <span class="author-name borrow-book-author">{{ book.author.name }}</span>
+
+                    <div class="timestamp" style="margin-top: 14px;">
+                        <div>ISBN: {{ book.details.isbn }}</div>
+                        <div>Pages: {{ book.details.pages }}</div>
+                        <div>Published: {{ book.details.published_date }}</div>
+                        <div>
+                            Available Copies: <strong>{{ available_copies }}</strong> / {{ book.total_copies }}
+                        </div>
+                    </div>
+
+                    {% if book.details.overview %}
+                        <div class="borrow-book-overview">
+                            <div class="section-label" style="margin-bottom: 8px;">Overview</div>
+                            <div class="borrow-book-overview-text">{{ book.details.overview }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container borrow-form-container">
+            <h2 style="margin-top: 0;">Borrow Request</h2>
+            <div class="subtitle">Request up to one week</div>
+
+            {% if error %}
+                <div style="background: rgba(255, 68, 68, 0.12); border: 1px solid #ff4444; color: #ffcf40; padding: 10px; margin-bottom: 16px; border-radius: 6px;">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            {% if request.user.role != 'guest' and request.user.role != 'student' %}
+                <p style="text-align: center;">Only guests can submit borrow requests.</p>
+            {% else %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <label>Library ID</label>
+                    <input type="text" name="library_id" value="{{ request.user.library_id }}" readonly />
+
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" value="{{ current_full_name }}" required />
+
+                    <label>Phone Number</label>
+                    <input
+                        type="tel"
+                        name="phone_number"
+                        value="{{ current_phone_number }}"
+                        pattern="^\+?\d{10,15}$"
+                        maxlength="16"
+                        required
+                    />
+
+                    <label>Email</label>
+                    <input type="text" name="email" value="{{ request.user.email }}" readonly />
+
+                    <label>Address</label>
+                    <input type="text" name="address" value="{{ current_address }}" required />
+
+                    <label>Return Date</label>
+                    <input
+                        type="date"
+                        name="return_date"
+                        min="{{ today|date:'Y-m-d' }}"
+                        max="{{ max_date|date:'Y-m-d' }}"
+                        value="{{ return_date|default:today|date:'Y-m-d' }}"
+                        required
+                    />
+
+                    <label>Status</label>
+                    <input type="text" value="Pending" disabled />
+                    <input type="hidden" name="status" value="Pending" />
+
+                    {% if available_copies <= 0 %}
+                        <button type="submit" class="submit-btn" disabled style="opacity: 0.6; cursor: not-allowed;">borrow (Unavailable)</button>
+                    {% else %}
+                        <button type="submit" class="submit-btn">borrow</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+

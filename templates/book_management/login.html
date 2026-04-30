@@ -1,0 +1,29 @@
+{% load static %}  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Sylvan Library</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Author_style.css' %}">
+</head>
+<body>
+<div class="auth-box">
+    <h2>WELCOME BACK</h2>
+
+    <form method="post" action="{% url 'book_management:login_view' %}">
+        {% csrf_token %}
+        
+        {% if error %}
+            <p style="color: #ffcf40; font-size: 0.8em;">{{ error }}</p>
+        {% endif %}
+
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+
+        <button type="submit">LOGIN</button>
+    </form>
+
+    <a href="{% url 'book_management:signup' %}">Create an account</a>
+</div>
+</body>
+</html>

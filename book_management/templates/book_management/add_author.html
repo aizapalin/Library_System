@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Scribe</title>
+    <style>
+        /* ================= ROOT VARIABLES ================= */
+        :root {
+            --forest-bg: #111a12;
+            --leather-brown: #3e2723;
+            --gold-leaf: #d4af37;
+            --paper-text: #e0d7c6;
+            --moss-accent: #82a041;
+            --ink-dark: #2d1b18;
+        }
+
+        /* ================= LAYOUT & BACKGROUND ================= */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Georgia', serif;
+            color: var(--paper-text);
+            background-image: 
+                radial-gradient(circle at center, rgba(27, 38, 29, 0.9) 0%, rgba(13, 20, 14, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: multiply;
+        }
+
+        .scribe-container {
+            background-color: var(--leather-brown);
+            padding: 50px;
+            border-radius: 4px 20px 20px 4px;
+            border-left: 15px solid var(--gold-leaf);
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+            position: relative;
+        }
+
+        h2 {
+            color: var(--gold-leaf);
+            text-align: center;
+            margin-bottom: 30px;
+            font-variant: small-caps;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* ================= NEW: MANAGEMENT ZONE SPACING ================= */
+        .management-zone {
+            margin-top: 60px; /* Added significant upper margin */
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .section-label {
+            text-align: center;
+            display: block;
+            margin-bottom: 20px;
+            color: var(--moss-accent);
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ================= FORM ELEMENTS ================= */
+        label {
+            color: var(--moss-accent);
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Shared Styles for Input and Select to ensure identical size */
+        input[type="text"], 
+        select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 4px;
+            color: var(--paper-text);
+            padding: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box; /* Critical: keeps padding inside the width */
+            font-family: 'Georgia', serif;
+            display: block;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold-leaf);
+        }
+
+        /* BUTTONS */
+        .add-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: transparent;
+            color: var(--gold-leaf);
+            border: 1px solid var(--gold-leaf);
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .add-btn:hover {
+            background-color: var(--gold-leaf);
+            color: var(--leather-brown);
+        }
+
+        .burn-scribe-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: transparent;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .burn-scribe-btn:hover {
+            background-color: #ff4444;
+            color: var(--leather-brown);
+        }
+
+        select option {
+            background-color: var(--leather-brown);
+            color: var(--paper-text);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-link a {
+            color: var(--moss-accent);
+            text-decoration: none;
+            font-size: 12px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .back-link a:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- This card lets librarians add and delete author records. -->
+    <div class="scribe-container">
+        <h2>Register Scribe</h2>
+        
+        <!-- This form creates a new author from the entered name. -->
+        <form method="POST">
+            {% csrf_token %}
+            <label>Name of the Author</label>
+            <input type="text" name="name" placeholder="Enter name..." required>
+            <button type="submit" class="add-btn">Add to Records</button>
+        </form>
+
+        <div class="management-zone">
+            <label class="section-label">Recorded Scribes</label>
+            
+            <!-- This form deletes the selected author from the dropdown list. -->
+            <form method="POST">
+                {% csrf_token %}
+                <select name="author_id" required>
+                    <option value="" disabled selected>-- Select a Scribe --</option>
+                    {% for author in authors %}
+                        <option value="{{ author.id }}">{{ author.name }}</option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit" name="delete_author" class="burn-scribe-btn">
+                    Burn Scribe
+                </button>
+            </form>
+        </div>
+
+
+        <!-- This link sends the user back to the book consignment form. -->
+        <p class="back-link">
+            <a href="{% url 'book_management:add_book' %}">← Back to Consignment</a>
+        </p>
+    </div>
+
+</body>
+</html>

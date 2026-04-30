@@ -1,0 +1,154 @@
+body {
+    background-image: 
+        radial-gradient(circle at center, rgba(27, 38, 29, 0.9) 0%, rgba(13, 20, 14, 0.95) 100%),
+        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+    color: #e0d7c6;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+    margin: 0;
+    min-height: 100vh;
+}
+
+
+.form-container {
+    background-color: rgba(62, 39, 35, 0.95); 
+    padding: 24px 32px;
+    border-radius: 10px;
+    border: 2px solid #d4af37;
+    width: 100%;
+    max-width: 520px;
+}
+
+h2 { color: #d4af37; text-align: center; margin-bottom: 30px; font-variant: small-caps; }
+
+/* Alignment: Text on Left, Purple Link on Right */
+label { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 8px; 
+    color: #82a041; 
+    font-size: 14px; 
+}
+
+.sub-link {
+    font-size: 11px; 
+    color: #82a041;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.sub-link:hover { color: #d4af37; text-decoration: underline; }
+
+/* Perfect Balance: Input and Select match 100% */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 25px;
+    background: #2d1b18;
+    border: 1px solid #d4af37;
+    color: #e0d7c6;
+    border-radius: 4px;
+    box-sizing: border-box; /* This is what makes them even */
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+
+textarea,
+input[type="file"] {
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+
+textarea {
+    padding: 12px;
+    background: #2d1b18;
+    border: 1px solid #d4af37;
+    color: #e0d7c6;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+input[type="file"] {
+    padding: 8px;
+    background: #2d1b18;
+    border: 1px solid #d4af37;
+    color: #e0d7c6;
+    border-radius: 4px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #d4af37;
+    color: #3e2723;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.submit-btn:hover { background-color: #fff; transform: translateY(-2px); }
+
+/* Right-aligned navigation */
+.back-navigation {
+    text-align: right; 
+    margin-top: 20px;
+}
+
+.back-navigation a {
+    color: #82a041;
+    text-decoration: none;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.back-navigation a:hover { color: #d4af37; }
+
+
+/* for borrow*/
+
+input[type="text"], 
+input[type="date"], 
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background: #2d1b18;
+    border: 1px solid #d4af37;
+    color: #e0d7c6;
+    border-radius: 4px;
+    box-sizing: border-box; /* This makes them the same width */
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+
+/* Specific fix for the search bar row */
+form div[style*="display: flex"] input {
+    margin-bottom: 0; /* Removes bottom margin when inside the search flexbox */
+}
+
+.submit-btn:hover {
+    background-color: #e5c158;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 12px;
+        align-items: stretch;
+    }
+    .form-container {
+        max-width: 100%;
+        padding: 20px;
+    }
+}

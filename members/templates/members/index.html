@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="management-zone members-page-center">
+    <h1>Patrons of the Archives</h1>
+    <div class="subtitle">Library Patrons Registry</div>
+
+    <div class="admin-controls" style="margin-bottom: 30px;">
+        <a href="{% url 'members:add_member' %}" class="add-volume-btn">+ Register New Patron</a>
+    </div>
+
+    <div class="book-list">
+        {% for member in members %}
+            <div class="book-card">
+                <div class="book-cover">
+                    <span style="font-size: 24px;">👤</span>
+                    <span>Scholar</span>
+                </div>
+                <div class="book-title">{{ member.first_name }} {{ member.last_name }}</div>
+                <span class="author-name">{{ member.email }}</span>
+                
+                <div class="timestamp">
+                    Status: <span style="color: {% if member.is_active %}var(--moss-accent){% else %}#ff4444{% endif %};">
+                        {% if member.is_active %}Active{% else %}Suspended{% endif %}
+                    </span><br>
+                    Joined: {{ member.date_joined }}
+                </div>
+
+                <div class="action-row">
+                    <a href="{% url 'members:edit_member' member.pk %}" class="action-btn rewrite-btn">Rewrite (Edit)</a>
+                    <form action="{% url 'members:delete_member' member.pk %}" method="POST" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" class="action-btn burn-btn">Erase (Delete)</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                <h2>No Patrons Found...</h2>
+                <p>The registry is currently empty.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="back-navigation" style="text-align: right; margin-top: 30px;">
+        <a href="{% url 'book_management:index' %}" style="color: #82a041; text-decoration: none; font-size: 13px; font-style: italic; transition: 0.3s;">
+            Return to Shelves →
+        </a>
+    </div>
+</div>
+{% endblock %}

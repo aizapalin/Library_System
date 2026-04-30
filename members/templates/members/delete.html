@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="management-zone members-page-center">
+    <h2>Erase Patron?</h2>
+    <div class="subtitle">This action cannot be undone.</div>
+
+    <div class="form-container" style="margin: 0 auto; text-align: center;">
+        <p style="margin-bottom: 20px;">Are you absolutely sure you wish to permanently remove <strong>{{ member.first_name }} {{ member.last_name }}</strong> from the archives?</p>
+        
+        <form method="POST" action="">
+            {% csrf_token %}
+            <button type="submit" class="submit-btn burn-btn-form">Yes, Erase Them</button>
+        </form>
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'members:index' %}">← Cancel Action (Cancel)</a>
+    </div>
+</div>
+{% endblock %}

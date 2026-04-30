@@ -1,0 +1,68 @@
+{% load static %}  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rewrite: {{ book.title }}</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Add_style.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Rewrite Volume</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if error %}
+                <p style="color: #ffcf40; font-size: 0.9em; text-align: center; margin-top: 0;">
+                    {{ error }}
+                </p>
+            {% endif %}
+            
+            <label><span>Title of the Tome</span></label>
+            <input type="text" name="title" value="{{ book.title }}" required>
+
+            <label>
+                <span>Scribe (Author)</span>
+                <a href="{% url 'book_management:add_author' %}" class="sub-link">[+ New Scribe]</a>
+            </label>
+            <select name="author">
+                {% for author in authors %}
+                    <option value="{{ author.id }}" {% if author.id == book.author.id %}selected{% endif %}>{{ author.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>
+                <span>Volume Category</span>
+                <a href="{% url 'book_management:add_category' %}" class="sub-link">[+ New Category]</a>
+            </label>
+            <select name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if book.category and cat.id == book.category.id %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label><span>ISBN Identification</span></label>
+            <input type="text" name="isbn" placeholder="e.g. 978-3-16..." value="{{ book.details.isbn }}" required>
+
+            <label><span>Total Copies</span></label>
+            <input type="number" name="total_copies" min="0" value="{{ book.total_copies }}">
+
+            <label><span>Pages</span></label>
+            <input type="number" name="pages" min="0" value="{{ book.details.pages|default:0 }}">
+
+            <label><span>Overview</span></label>
+            <textarea name="overview" rows="4" style="width: 100%;">{{ book.details.overview }}</textarea>
+
+            <label><span>Cover Image</span></label>
+            <input type="file" name="cover_image" accept="image/*">
+
+            <button type="submit" class="submit-btn">Save Changes</button>
+        </form>
+        
+        <div class="back-navigation">
+            <a href="{% url 'book_management:index' %}">Return to Shelves →</a>
+        </div>
+    </div>
+</body>
+</html>

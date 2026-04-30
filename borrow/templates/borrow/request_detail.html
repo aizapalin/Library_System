@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{# This section shows one borrow request and lets a librarian update its status. #}
+<div class="management-zone">
+    <h1>Borrow Request</h1>
+    <div class="subtitle">Review request details and update status</div>
+
+    {# This card displays the selected book details and the related member request information. #}
+    <div class="book-card" style="max-width: 920px; width: 100%; margin: 0 auto;">
+        <div class="book-title">{{ record.book.title }}</div>
+        <span class="author-name">{{ record.book.author.name }} • {{ record.book.category.name|default:"General" }}</span>
+
+        {# This block lists request dates, current status, and member contact details. #}
+        <div class="timestamp" style="text-align: left; width: 100%; margin-top: 18px;">
+            <strong>Request Information</strong><br>
+            Issued: {{ record.borrow_date }}<br>
+            Due Date: {{ record.due_date }}<br>
+            Current Status: {{ record.status }}<br>
+            {% if record.return_date %}
+            Return Date: {{ record.return_date }}<br>
+            {% endif %}
+            <br>
+            <strong>Member Information</strong><br>
+            Full Name: {{ record.member.first_name }} {{ record.member.last_name }}<br>
+            Email: {{ record.member.email }}<br>
+            Phone Number: {{ record.member.phone_number|default:"N/A" }}<br>
+            Address: {{ record.member.address|default:"N/A" }}<br>
+        </div>
+
+        {# These actions change status based on the current request state. #}
+        <div class="action-row" style="margin-top: 20px;">
+            {% if record.status == "Pending" %}
+                {# This form accepts a pending request and keeps the user on this page. #}
+                <form action="{% url 'borrow:update_status' record.pk 'accept' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'borrow:request_detail' record.pk %}">
+                    <button type="submit" class="action-btn rewrite-btn">ACCEPT</button>
+                </form>
+                {# This form declines a pending request and keeps the user on this page. #}
+                <form action="{% url 'borrow:update_status' record.pk 'decline' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'borrow:request_detail' record.pk %}">
+                    <button type="submit" class="action-btn burn-btn">DECLINE</button>
+                </form>
+            {% elif record.status == "Active" or record.status == "Overdue" %}
+                {# This form marks an active or overdue request as returned. #}
+                <form action="{% url 'borrow:update_status' record.pk 'return' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'borrow:request_detail' record.pk %}">
+                    <button type="submit" class="action-btn rewrite-btn">MARK RETURNED</button>
+                </form>
+            {% endif %}
+        </div>
+
+        {# This link returns to the full list of borrowing records. #}
+        <div style="margin-top: 16px;">
+            <a href="{% url 'borrow:borrow_index' %}" class="back-link">← Back to Active Incantations</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

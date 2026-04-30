@@ -1,0 +1,176 @@
+{% load static %}  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sylvan Library - Book Management</title>
+    <link rel="stylesheet" href="{% static 'book_management/css/Index_style.css' %}">
+</head>
+
+
+
+<body class="{% if user.is_superuser %}admin-mode{% else %}member-mode{% endif %}">
+
+    <nav style="margin-bottom: 40px; display: flex; gap: 30px; border-bottom: 1px solid #d4af37; padding: 20px; justify-content: center; background: rgba(0,0,0,0.2);">
+        {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
+            <a href="{% url 'book_management:index' %}" 
+               style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+               📜 The Archives
+            </a>
+
+            <a href="{% url 'members:index' %}" 
+               style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+               👤 The Scholars
+            </a>
+
+            <a href="{% url 'borrow:borrow_index' %}" 
+                style="color: #d4af37; text-decoration: none; font-variant: small-caps; letter-spacing: 2px; font-weight: bold;">
+                ✨ Active Incantations
+            </a>
+        {% endif %}
+    </nav>
+
+    <nav class="sylvan-nav-shelf">
+        <div class="shelf-left">
+            <form action="{% url 'book_management:index' %}" method="GET" class="search-form">
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search books, authors, categories..."
+                    class="search-input"
+                    value="{{ query }}"
+                    list="bookSearchSuggestions"
+                    data-search-input
+                    data-suggest-url="{% url 'book_management:search_suggestions' %}"
+                    autocomplete="off"
+                >
+                <datalist id="bookSearchSuggestions"></datalist>
+                <button type="submit" class="search-btn">🔍</button>
+            </form>
+        </div>
+
+        <div class="shelf-right">
+            <a href="{% url 'book_management:profile' %}" class="scribe-profile" title="Profile">
+                {% if request.user.profile_pic %}
+                    <img src="{{ request.user.profile_pic.url }}" alt="Profile" class="profile-avatar">
+                {% else %}
+                    <svg class="profile-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="#d4af37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="#d4af37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                {% endif %}
+            </a>
+            <form action="{% url 'book_management:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">LOG OUT</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="title-container">
+        <h1 class="main-title">The Willow Library</h1>
+        <p class="management-tag">Welcome! Ready to find a good book today?</p>
+    </div>
+
+    {% regroup books by category as category_list %}
+
+    {% for group in category_list %}
+        <section class="category-section">
+            <div class="category-title">
+                {{ group.grouper.name|default:"General" }}
+            </div>
+
+            <div class="book-carousel" data-carousel>
+                <button class="carousel-arrow left" type="button" data-carousel-prev aria-label="Previous books">‹</button>
+                <div class="carousel-viewport" data-carousel-viewport>
+                    <div class="book-list carousel-track" data-carousel-track>
+
+                        {% for book in group.list %}
+                            <div class="book-card" onclick="togglePop(this)">
+                                <div class="book-cover">
+                                    {% if book.details.cover_image %}
+                                        <img src="{{ book.details.cover_image.url }}" alt="{{ book.title }} cover" class="book-cover-image">
+                                    {% else %}
+                                        <span class="decoration">🌿</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="book-info">
+                                    <span class="book-title">{{ book.title }}</span>
+                                    <span class="author-name">{{ book.author.name }}</span> 
+                                </div>
+
+                                <div class="timestamp">
+                                    ISBN: {{ book.details.isbn }} <br> {{ book.details.published_date }}
+                                </div>
+                                
+                                <div class="action-row">
+                                    {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
+                                        <a href="{% url 'book_management:edit_book' book.id %}" class="rewrite-btn">[REWRITE]</a>
+                                        <form action="{% url 'book_management:delete_book' book.id %}" method="post" onsubmit="return confirm('Burn this book? This will permanently delete it.');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="burn-btn">[BURN]</button>
+                                        </form>
+                                    {% else %}
+                                        <a href="{% url 'book_management:book_detail' book.id %}" class="borrow-btn">borrow</a>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        {% empty %}
+                            <div class="empty-state">
+                                <p>The library shelves are currently bare. No volumes found.</p>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <button class="carousel-arrow right" type="button" data-carousel-next aria-label="Next books">›</button>
+            </div>
+        </section>
+    {% endfor %}
+
+        <div class="admin-controls">
+            {% if user.is_staff or user.is_superuser or user.role == 'librarian' %}
+                <a href="{% url 'book_management:add_book' %}" class="add-volume-btn">+ Consign New Volume</a>
+            {% endif %}
+        </div>
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+
+    <script>
+        function togglePop(card) {
+            const track = card.closest('[data-carousel-track]') || card.closest('.book-list');
+            if (!track) return;
+
+            if (card.classList.contains('active')) {
+                card.classList.remove('active');
+                track.classList.remove('has-active');
+            } else {
+                track.querySelectorAll('.book-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                track.classList.add('has-active');
+            }
+        }
+
+        document.body.addEventListener('click', function(e) {
+            if (!e.target.closest('.book-card') && !e.target.closest('header') && !e.target.closest('.admin-controls')) {
+                document.querySelectorAll('[data-carousel-track], .book-list').forEach(track => {
+                    track.querySelectorAll('.book-card').forEach(c => c.classList.remove('active'));
+                    track.classList.remove('has-active');
+                });
+            }
+        }, true);
+    </script>
+
+    <script src="{% static 'book_management/js/carousel.js' %}"></script>
+    <script src="{% static 'book_management/js/search_suggestions.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,869 @@
+/* ================= ROOT VARIABLES ================= */
+:root {
+    --forest-bg: #111a12;
+    --leather-brown: #3e2723;
+    --gold-leaf: #d4af37;     
+    --sylvan-yellow: #ffeb3b; 
+    --paper-text: #e0d7c6;
+    --moss-accent: #82a041;
+    --ink-dark: #2d1b18;
+    --content-max: 1400px;
+    --page-pad: 24px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --shadow-md: 0 12px 30px rgba(0,0,0,0.45);
+    --shadow-lg: 0 22px 60px rgba(0,0,0,0.55);
+    --ui-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+
+/* Prevent accidental overflow on mobile */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* keeps page from side-scrolling; carousels still scroll inside their viewport */
+}
+
+/* ================= BODY & BACKGROUND ================= */
+body {
+    font-family: var(--ui-font);
+    color: var(--paper-text);
+    margin: 0;
+    padding: 140px var(--page-pad) 40px var(--page-pad); 
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 100vh;
+    background-image:
+        radial-gradient(circle at center, rgba(27, 38, 29, 0.9) 0%, rgba(13, 20, 14, 0.95) 100%),
+        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+}
+
+/* ================= PROFILE PAGE CENTERING ================= */
+body.profile-page {
+    /* Center the whole profile experience */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px var(--page-pad);
+    --space-1: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+}
+
+/* Dark overlay for readability (profile-only) */
+body.profile-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.42);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.profile-page > * {
+    position: relative;
+    z-index: 1;
+}
+
+body.profile-page > nav {
+    /* Keep navigation accessible without shifting centering */
+    position: absolute;
+    top: var(--space-2);
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: 0 var(--page-pad);
+    box-sizing: border-box;
+}
+
+body.profile-page .title-container {
+    margin-bottom: var(--space-3);
+    margin-top: 50px;
+}
+
+body.profile-page .main-title {
+    font-size: 64px !important;
+    letter-spacing: 6px;
+    white-space: nowrap;
+    line-height: 1;
+    text-align: center;
+}
+
+body.profile-page .management-tag {
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-top: var(--space-1);
+}
+
+body.profile-page .book-card {
+    width: 100%;
+    max-width: 560px;
+    padding: var(--space-4);
+    align-items: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+}
+
+body.profile-page .book-card img,
+body.profile-page .book-card > div:first-child {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.profile-page .book-info {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+body.profile-page .author-name {
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+/* Keep member profile account area spacious and aligned */
+body.profile-page .book-list {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-top: var(--space-2);
+}
+
+body.profile-page .empty-state {
+    padding: var(--space-3) var(--space-2);
+}
+
+@media (max-width: 480px) {
+    body.profile-page {
+        padding: 72px 12px 28px 12px;
+    }
+    body.profile-page > nav {
+        top: 10px;
+        gap: var(--space-2);
+    }
+    body.profile-page .title-container {
+        margin-bottom: 20px;
+    }
+    body.profile-page .book-card {
+        padding: 24px;
+    }
+    body.profile-page .main-title {
+        font-size: 44px !important;
+        letter-spacing: 4px;
+    }
+}
+
+/* Edit Profile page uses the same centered dashboard layout */
+body.edit-profile-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px var(--page-pad);
+}
+
+body.edit-profile-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.42);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.edit-profile-page > * {
+    position: relative;
+    z-index: 1;
+}
+
+body.edit-profile-page > nav {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 0 var(--page-pad);
+    box-sizing: border-box;
+}
+
+body.edit-profile-page .title-container {
+    margin-bottom: 24px;
+}
+
+body.edit-profile-page .book-card {
+    width: 100%;
+    max-width: 560px;
+    align-items: center;
+    text-align: center;
+    padding: 32px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 480px) {
+    body.edit-profile-page {
+        padding: 72px 12px 28px 12px;
+    }
+    body.edit-profile-page .book-card {
+        padding: 24px;
+    }
+}
+
+/* Consistent centered content width (without shrinking the whole page) */
+.title-container,
+.category-section,
+.admin-controls {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ================= TOP NAV SHELF (60% OPACITY) ================= */
+.sylvan-nav-shelf {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    /* Transparency set to 0.6 (60%) */
+    background: rgba(26, 18, 13, 0.6); 
+    /* Blur effect makes the transparency look premium and readable */
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--gold-leaf);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    box-sizing: border-box;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+/* Search (Left) */
+.search-form {
+    display: flex;
+    align-items: center;
+    background: rgba(45, 27, 24, 0.8); /* Slightly more solid for input visibility */
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: var(--radius-sm);
+    padding-right: 10px;
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    color: var(--paper-text);
+    padding: 10px 15px;
+    font-family: var(--ui-font);
+    width: 280px;
+    outline: none;
+}
+
+.search-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    filter: sepia(1) saturate(5); 
+}
+
+/* Profile & Logout (Right) */
+.shelf-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.scribe-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--gold-leaf);
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.scribe-profile:hover {
+    transform: scale(1.08);
+}
+
+.profile-icon {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4));
+}
+
+.profile-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--gold-leaf);
+}
+
+.scribe-name {
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.logout-btn {
+    background: var(--gold-leaf);
+    color: var(--leather-brown);
+    border: none;
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    font-family: var(--ui-font);
+    font-weight: bold;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #f1d592;
+    box-shadow: 0 0 12px var(--gold-leaf);
+}
+
+/* Borrow buttons (guest/detail navigation) */
+.borrow-btn {
+    width: 100%;
+    background: transparent;
+    color: var(--gold-leaf);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 12px 5px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.borrow-btn:hover {
+    background: rgba(212, 175, 55, 0.9);
+    color: var(--leather-brown);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+}
+
+/* ================= GRAND YELLOW TITLE ================= */
+.title-container {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.main-title {
+    font-size: 100px !important; 
+    color: var(--sylvan-yellow) !important; 
+    letter-spacing: 12px;
+    font-variant: small-caps;
+    text-shadow: 0 4px 20px rgba(0,0,0,1), 0 0 15px rgba(255, 235, 59, 0.2);
+    margin: 0;
+    line-height: 1;
+}
+
+.management-tag {
+    color: var(--moss-accent);
+    font-size: 18px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+
+/* ================= THE BOOK GRID ================= */
+.book-list {
+    width: 100%;
+    max-width: var(--content-max);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+    padding: 0; /* keep alignment consistent with page padding */
+}
+
+/* ================= BOOK CAROUSEL (OVERRIDES ONLY INSIDE WRAPPER) ================= */
+.book-carousel {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.category-section {
+    width: 100%;
+    max-width: var(--content-max);
+    margin: 0 auto 34px auto;
+    padding: 30px;
+    box-sizing: border-box;
+    background: rgba(20, 10, 5, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 500px;
+    position: relative;
+}
+
+.category-section .book-carousel {
+    overflow: hidden;
+}
+
+.category-section .book-carousel .carousel-arrow.left {
+    left: 10px;
+}
+
+.category-section .book-carousel .carousel-arrow.right {
+    right: 10px;
+}
+
+.category-title {
+    width: 100%;
+    max-width: var(--content-max);
+    margin: 0 auto 10px auto;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--gold-leaf);
+    font-variant: small-caps;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    font-weight: bold;
+    opacity: 0.95;
+}
+
+.book-carousel .carousel-viewport {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    touch-action: pan-x;
+    /* This keeps cards contained inside the shelf while preserving arrow space. */
+    padding: 0 56px;
+}
+
+.book-carousel .carousel-viewport::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.book-carousel .carousel-viewport.is-dragging {
+    cursor: grabbing;
+}
+
+.book-carousel .carousel-track.book-list {
+    max-width: none;
+    width: max-content;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 22px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    scroll-snap-type: x mandatory;
+}
+
+.book-carousel .carousel-track .book-card {
+    flex: 0 0 auto;
+    width: 260px;
+    min-height: 380px;
+    scroll-snap-align: start;
+}
+
+.book-carousel .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: rgba(26, 18, 13, 0.75);
+    color: var(--gold-leaf);
+    cursor: pointer;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    line-height: 1;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
+    user-select: none;
+}
+
+.book-carousel .carousel-arrow:hover {
+    transform: translateY(-50%) scale(1.06);
+    background: rgba(26, 18, 13, 0.9);
+}
+
+.book-carousel .carousel-arrow:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.book-carousel .carousel-arrow.left {
+    left: 6px;
+}
+
+.book-carousel .carousel-arrow.right {
+    right: 6px;
+}
+
+/* Give arrows room on edges handled above */
+
+.book-card {
+    background-color: rgba(62, 39, 35, 0.8); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 14px;
+    border-radius: var(--radius-md);
+    border-bottom: 5px solid var(--ink-dark);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    position: relative;
+}
+
+.book-card:hover {
+    transform: translateY(-10px);
+    border-bottom-color: var(--gold-leaf);
+    background-color: rgba(62, 39, 35, 1); 
+    backdrop-filter: none; 
+}
+
+.book-card:focus-within {
+    border-bottom-color: var(--gold-leaf);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.18), var(--shadow-md);
+}
+
+.book-card .book-info {
+    width: 100%;
+    text-align: center;
+}
+
+.book-cover {
+    width: 180px;
+    height: 220px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--moss-accent);
+    font-style: italic;
+    font-size: 12px;
+}
+
+.book-cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.book-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--gold-leaf);
+    line-height: 1.1;
+    min-height: 38px;
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.author-name {
+    font-size: 13px;
+    color: var(--moss-accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 6px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-card .timestamp {
+    width: 100%;
+    text-align: center;
+    line-height: 1.45;
+    margin-top: 8px;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.action-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.rewrite-btn {
+    flex: 3;
+    background: transparent;
+    color: var(--paper-text);
+    border: 1px solid rgba(224, 215, 198, 0.3);
+    padding: 12px 5px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.rewrite-btn:hover {
+    background: var(--gold-leaf);
+    color: var(--leather-brown);
+}
+
+.burn-form {
+    flex: 1;
+    display: flex;
+}
+
+.burn-btn {
+    width: 100%;
+    background: transparent;
+    color: #ff4444;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+    padding: 12px 5px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.burn-btn:hover {
+    background: #ff4444;
+    color: white;
+    box-shadow: 0 0 14px rgba(255, 68, 68, 0.25);
+}
+
+.burn-btn:active {
+    transform: translateY(1px);
+}
+
+.admin-controls {
+    margin-top: 80px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.add-volume-btn {
+    text-decoration: none;
+    padding: 15px 40px;
+    color: var(--gold-leaf);
+    border: 1px solid var(--gold-leaf);
+    border-radius: 50px;
+    font-variant: small-caps;
+    letter-spacing: 2px;
+    transition: 0.3s;
+}
+
+.add-volume-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+@media (max-width: 1024px) {
+    .main-title {
+        font-size: 72px !important;
+        letter-spacing: 6px;
+    }
+    .search-input {
+        width: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        --page-pad: 12px;
+        padding: 120px var(--page-pad) 24px var(--page-pad);
+    }
+    .sylvan-nav-shelf {
+        padding: 0 12px;
+        height: auto;
+        min-height: 75px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .shelf-left,
+    .shelf-right {
+        width: 100%;
+    }
+    .shelf-right {
+        justify-content: center;
+        gap: 14px;
+        padding-bottom: 8px;
+    }
+    .search-form {
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+    .search-input {
+        width: 100%;
+        min-width: 0;
+    }
+    .main-title {
+        font-size: 44px !important;
+        letter-spacing: 4px;
+    }
+    .book-cover {
+        width: 150px;
+        height: 210px;
+    }
+
+    .book-carousel {
+        padding: 0;
+    }
+
+    .book-carousel .carousel-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+    }
+
+    .book-carousel .carousel-viewport {
+        padding-left: 46px;
+        padding-right: 46px;
+    }
+
+    .book-carousel .carousel-track.book-list {
+        gap: 16px;
+        padding: 10px 10px;
+    }
+
+    .book-carousel .carousel-track .book-card {
+        width: 180px;
+    }
+
+    .category-title {
+        padding: 0;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 128px; /* extra space for wrapped fixed nav */
+    }
+    .sylvan-nav-shelf {
+        gap: 10px;
+    }
+    .search-form {
+        padding-right: 6px;
+    }
+    .logout-btn {
+        padding: 8px 14px;
+    }
+    .profile-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .book-carousel .carousel-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+
+    .book-carousel .carousel-viewport {
+        padding-left: 42px;
+        padding-right: 42px;
+    }
+
+    .book-carousel .carousel-track .book-card {
+        width: 150px;
+    }
+
+    .book-carousel .carousel-track .book-card {
+        padding: 14px;
+    }
+
+    .book-carousel .carousel-track.book-list {
+        gap: 12px;
+    }
+
+    .book-carousel .book-cover {
+        width: 118px;
+        height: 170px;
+    }
+
+    .book-carousel .book-title {
+        font-size: 16px;
+        min-height: 36px;
+    }
+}
+
+@media (min-width: 1440px) {
+    body {
+        --page-pad: 40px;
+    }
+    .title-container {
+        margin-bottom: 70px;
+    }
+    .book-list {
+        gap: 34px;
+    }
+}
+
+@media (max-width: 360px) {
+    .book-carousel .carousel-track .book-card {
+        width: 130px;
+        padding: 12px;
+    }
+
+    .book-carousel .book-cover {
+        width: 110px;
+        height: 158px;
+    }
+}
