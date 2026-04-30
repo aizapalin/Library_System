@@ -1,4 +1,4 @@
-# Library System (Palin Book Management)
+# Library System
 
 A comprehensive web-based **library book management system** built with **Django** for managing the book catalog, member accounts, and borrowing requests in a single platform.
 
@@ -14,7 +14,6 @@ A comprehensive web-based **library book management system** built with **Django
 - [Installation](#installation)
 - [Running the Application](#running-the-application)
   - [Development Server](#development-server)
-  - [Admin Panel](#admin-panel)
 - [User Roles](#user-roles)
 - [Application Modules](#application-modules)
 - [Project Structure](#project-structure)
@@ -23,12 +22,13 @@ A comprehensive web-based **library book management system** built with **Django
   - [Media Uploads (Cover Images)](#media-uploads-cover-images)
 - [Documentation Files](#documentation-files)
 - [Version History](#version-history)
-- [License](#license)
 - [Support](#support)
+- [License](#license)
+
 
 ## Overview
 
-**Library System (Palin Book Management)** is a Django-based web application developed for **IT 205 (IT 2A) – Integrative Programming & Technologies**.
+**Library System** is a Django-based web application developed for **IT 205 (IT 2A) – Integrative Programming & Technologies**.
 
 It is designed to help a library:
 
@@ -102,7 +102,7 @@ Recommended:
 
 ```bash
 git clone <repository-url>
-cd Palin_Book_Management
+cd Library_System
 ```
 
 2. Create a virtual environment
@@ -163,14 +163,6 @@ python manage.py runserver
 Open your browser and navigate to:
 
 - `http://127.0.0.1:8000/` (application)
-- `http://127.0.0.1:8000/admin/` (admin panel)
-
-### Admin Panel
-
-Use the Django admin to manage records (depending on what’s registered in `admin.py` across apps):
-
-- User accounts (including roles via the custom user model)
-- Books / members / borrowing records (if enabled in admin)
 
 ## User Roles
 
@@ -241,10 +233,6 @@ When running locally with `DEBUG=True`, uploaded files are accessible via the de
   - Member management and profile pages
   - Borrowing/request module with status tracking
 
-## License
-
-This project is intended for academic use as part of coursework. If you plan to distribute or deploy publicly, add a license file (e.g., MIT) and update this section accordingly.
-
 ## Support
 
 If you encounter issues running the project:
@@ -252,4 +240,10 @@ If you encounter issues running the project:
 - Confirm your virtual environment is activated and dependencies are installed.
 - Re-run migrations: `python manage.py migrate`
 - Check Django settings in `backend/settings.py` (especially `DEBUG`, `ALLOWED_HOSTS`, and media/static settings).
+
+## License
+
+This project is intended for academic use as part of coursework. This software is proprietary to JMCFI 2nd Year IT Student. All rights reserved.
+
+
 
